@@ -1,27 +1,18 @@
 #!/usr/bin/with-contenv bash
 
-# Determine if setup is needed
-if [ ! -f /usr/local/lib/python***/dist-packages/sshuttle ] && \
-[ -f /usr/bin/apt ]; then
-  ## Ubuntu
-  apt-get update
-  apt-get install --no-install-recommends -y \
-    iptables \
-    openssh-client \
-    python3 \
-    python3-pip 
-  pip3 install sshuttle
-fi
-if [ ! -f /usr/lib/python***/site-packages/sshuttle ] && \
-[ -f /sbin/apk ]; then
-  # Alpine
-  apk add --no-cache \
-    iptables \
-    openssh \
-    py3-pip \
-    python3 
-  pip3 install sshuttle
-fi
+echo "**** adding opentracing modules ****"
 
-chown -R root:root /root
-chmod -R 600 /root/.ssh
+# OpenTracing
+wget https://github.com/opentracing-contrib/nginx-opentracing/releases/download/v0.12.0/linux-amd64-nginx-1.18.0-ngx_http_module.so.tgz | gunzip -c /usr/lib/nginx/modules/ngx_http_opentracing_module.so
+
+# Jaeger
+wget https://github.com/jaegertracing/jaeger-client-cpp/releases/download/v0.4.2/libjaegertracing_plugin.linux_amd64.so -O /usr/lib/nginx/modules/libjaegertracing_plugin.so
+
+# LightStep
+wget -O - https://github.com/lightstep/lightstep-tracer-cpp/releases/download/v0.8.1/linux-amd64-liblightstep_tracer_plugin.so.gz | gunzip -c > /usr/lib/nginx/modules/liblightstep_tracer_plugin.so
+
+# Zipkin
+wget -O - https://github.com/rnburn/zipkin-cpp-opentracing/releases/download/v0.5.2/linux-amd64-libzipkin_opentracing_plugin.so.gz | gunzip -c > /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
+
+# Datadog
+wget -O - https://github.com/DataDog/dd-opentracing-cpp/releases/download/v0.3.0/linux-amd64-libdd_opentracing_plugin.so.gz | gunzip -c > /usr/lib/nginx/modules/libdd_opentracing_plugin.so
