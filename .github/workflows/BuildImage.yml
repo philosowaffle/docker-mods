@@ -3,8 +3,8 @@ name: Build Image
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  ENDPOINT: "user/endpoint"
-  BRANCH: "master"
+  ENDPOINT: "philosowaffle/swag-nginx-opentracing"
+  BRANCH: "swag-nginx-opentracing"
 
 jobs:
   build:
