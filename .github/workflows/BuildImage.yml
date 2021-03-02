@@ -4,7 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 env:
   ENDPOINT: "philosowaffle/swag-nginx-opentracing"
-  BRANCH: "master"
+  BRANCH: "swag-nginx-opentracing"
 
 jobs:
   build:
