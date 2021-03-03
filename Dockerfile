@@ -35,8 +35,8 @@ RUN  ls -l /nginx/objs
 FROM scratch
 RUN mkdir -p /custom_modules
 
-RUN ls -l root
 RUN ls -l /
+RUN ls -l /custom_modules
 
 COPY --from=0 /usr/local/lib/libopentracing.so.1.5.1 /custom_modules/libopentracing.so
 COPY --from=0 /usr/local/lib/libzipkin.so.0.5.2 /custom_modules/libzipkin.so
