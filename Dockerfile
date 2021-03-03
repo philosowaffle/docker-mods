@@ -18,31 +18,11 @@ RUN  cd zipkin-cpp-opentracing && \
      make && make install
 RUN  git clone https://github.com/opentracing-contrib/nginx-opentracing.git
 RUN  ls -l /nginx-opentracing/opentracing
-RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git
-RUN \
-     cd nginx && \
-     auto/configure \
-        --with-compat \
-        --add-dynamic-module=/nginx-opentracing/opentracing \
-        --with-debug && \
-     make modules && \
-     ls -l objs && \
-     echo Made
-RUN  ls -l /usr/local/lib
-RUN  ls -l /nginx/objs
 
 FROM scratch
-COPY --from=0 /usr/local/lib/libopentracing.so.1.5.1 /usr/local/lib/libopentracing.so.1.5.1
-COPY --from=0 /usr/local/lib/libzipkin.so.0.5.2 /usr/local/lib/libzipkin.so.0.5.2
-COPY --from=0 /usr/local/lib/libzipkin_opentracing.so.0.5.2 /usr/local/lib/libzipkin_opentracing.so.0.5.2
-COPY --from=0 /nginx/objs/ngx_http_opentracing_module.so /etc/nginx/modules/ngx_http_opentracing_module.so
-
-RUN \
-     ln -s /usr/local/lib/libopentracing.so.1.5.1 /usr/local/lib/libopentracing.so.1  && \
-     ln -s /usr/local/lib/libopentracing.so.1 /usr/local/lib/libopentracing.so && \
-     ln -s /usr/local/lib/libzipkin.so.0.5.2 /usr/local/lib/libzipkin.so.0 && \
-     ln -s /usr/local/lib/libzipkin.so.0 /usr/local/lib/libzipkin.so && \
-     ln -s /usr/local/lib/libzipkin_opentracing.so.0.5.2 /usr/local/lib/libzipkin_opentracing.so.0 && \
-     ln -s /usr/local/lib/libzipkin_opentracing.so.0 /usr/local/lib/libzipkin_opentracing.so
+COPY --from=0 /usr/local/lib/libopentracing.so.1.5.1 /usr/lib/nginx/modules/libopentracing.so
+COPY --from=0 /usr/local/lib/libzipkin.so.0.5.2 /usr/lib/nginx/modules/libzipkin.so
+COPY --from=0 /usr/local/lib/libzipkin_opentracing.so.0.5.2 /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
+COPY --from=0 /nginx/objs/ngx_http_opentracing_module.so /usr/lib/nginx/modules/ngx_http_opentracing_module.so
 
 # https://github.com/opentracing-contrib/nginx-opentracing/issues/72
