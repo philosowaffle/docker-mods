@@ -38,10 +38,8 @@ COPY --from=0 /usr/local/lib/libopentracing.so.1.5.1 opentracing_modules/libopen
 COPY --from=0 /usr/local/lib/libzipkin.so.0.5.2 opentracing_modules/libzipkin.so
 COPY --from=0 /usr/local/lib/libzipkin_opentracing.so.0.5.2 opentracing_modules/libzipkin_opentracing_plugin.so
 COPY --from=0 /nginx/objs/ngx_http_opentracing_module.so opentracing_modules/ngx_http_opentracing_module.so
-RUN ls -l opentracing_modules
 
 COPY opentracing_modules/ /
 COPY root/ /
-RUN ls -l /
 
 # https://github.com/opentracing-contrib/nginx-opentracing/issues/72
