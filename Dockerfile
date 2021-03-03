@@ -1,42 +1,34 @@
-FROM nginx:1.18.0-alpine
+FROM alpine:3.10
 
-RUN \
-     apk update && \
-     apk upgrade && \
-     apk add curl && \
-     apk add curl-dev protobuf-dev pcre-dev openssl-dev && \
-     apk add build-base cmake autoconf automake git
-RUN  git clone -b v1.5.1 https://github.com/opentracing/opentracing-cpp.git
-RUN  cd opentracing-cpp && \
-     mkdir .build && cd .build && ls && \
-     cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && ls && \
-     make && make install
-RUN  git clone -b v0.5.2 https://github.com/rnburn/zipkin-cpp-opentracing.git
-RUN  cd zipkin-cpp-opentracing && \
-     mkdir .build && cd .build && \
-     cmake -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && \
-     make && make install
-RUN  git clone https://github.com/opentracing-contrib/nginx-opentracing.git
-RUN  ls -l /nginx-opentracing/opentracing
-RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git
-RUN \
-     cd nginx && \
-     auto/configure \
-        --with-compat \
-        --add-dynamic-module=/nginx-opentracing/opentracing \
-        --with-debug && \
-     make modules && \
-     ls -l objs && \
-     echo Made
-RUN  ls -l /usr/local/lib
-RUN  ls -l /nginx/objs
+WORKDIR /usr/src/app
 
-FROM nginx:1.18.0-alpine
-RUN \
-     apk update && \
-     apk upgrade && \
-     apk add curl && \
-     apk add curl-dev protobuf-dev pcre-dev openssl-dev
+ENV NGINX_VERSION="1.18.0"
+ENV NGINX_OPENTRACING_VERSION="v0.9.0"
+ENV NGINX_OPENTRACING_CPP_VERSION="v1.5.1"
+ENV ZIPKIN_OPENTRACING_VERSION="v0.5.2"
+
+ENV MAKEFLAGS="-j4"
+
+RUN apk --update add tar build-base gcompat linux-headers pcre-dev zlib-dev gettext openssl-dev git cmake curl curl-dev msgpack-c-dev
+
+RUN mkdir -p /usr/local/nginx/modules && \
+    mkdir nginx && wget -q -O - http://nginx.org/download/nginx-1.18.0.tar.gz | tar xz -C nginx --strip-components=1 -f -
+
+RUN cd /usr/src/app && \
+    git clone -b $NGINX_OPENTRACING_CPP_VERSION https://github.com/opentracing/opentracing-cpp.git && \
+    cd opentracing-cpp && \
+    mkdir .build && cd .build && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && \
+    make && make install
+RUN cd /usr/src/app && \
+    git clone -b $ZIPKIN_OPENTRACING_VERSION https://github.com/rnburn/zipkin-cpp-opentracing.git && \
+    cd zipkin-cpp-opentracing && \
+    mkdir .build && cd .build && \
+    cmake -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && \
+    make && make install
+RUN cd /usr/src/app && \
+    git clone https://github.com/opentracing-contrib/nginx-opentracing.git
+    
 COPY --from=0 /usr/local/lib/libopentracing.so.1.5.1 /usr/local/lib/libopentracing.so.1.5.1
 COPY --from=0 /usr/local/lib/libzipkin.so.0.5.2 /usr/local/lib/libzipkin.so.0.5.2
 COPY --from=0 /usr/local/lib/libzipkin_opentracing.so.0.5.2 /usr/local/lib/libzipkin_opentracing.so.0.5.2
@@ -50,3 +42,4 @@ RUN \
      ln -s /usr/local/lib/libzipkin_opentracing.so.0.5.2 /usr/local/lib/libzipkin_opentracing.so.0 && \
      ln -s /usr/local/lib/libzipkin_opentracing.so.0 /usr/local/lib/libzipkin_opentracing.so
 
+# https://github.com/opentracing-contrib/nginx-opentracing/issues/72
