@@ -2,6 +2,6 @@
 
 echo "**** adding opentracing modules ****"
 
-mv /libopentracing.so /usr/lib/nginx/modules/libopentracing.so
-mv /libzipkin_opentracing_plugin.so /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
-mv /ngx_http_opentracing_module.so /usr/lib/nginx/modules/ngx_http_opentracing_module.so
+mv /custom_modules/libopentracing.so /usr/lib/nginx/modules/libopentracing.so
+mv /custom_modules/libzipkin_opentracing_plugin.so /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
+mv /custom_modules/ngx_http_opentracing_module.so /usr/lib/nginx/modules/ngx_http_opentracing_module.so
