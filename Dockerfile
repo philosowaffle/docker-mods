@@ -33,8 +33,8 @@ RUN  ls -l /usr/local/lib
 RUN  ls -l /nginx/objs
 
 FROM scratch
-mkdir -p root/custom_modules
-mkdir -p /custom_modules
+RUN mkdir -p root/custom_modules
+RUN mkdir -p /custom_modules
 
 RUN ls -l root
 RUN ls -l /
