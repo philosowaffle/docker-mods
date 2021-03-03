@@ -1,4 +1,4 @@
-FROM nginx:1.15.9-alpine
+FROM nginx:1.18.0-alpine
 
 RUN \
      apk update && \
@@ -18,7 +18,7 @@ RUN  cd zipkin-cpp-opentracing && \
      make && make install
 RUN  git clone https://github.com/opentracing-contrib/nginx-opentracing.git
 RUN  ls -l /nginx-opentracing/opentracing
-RUN  git clone -b release-1.15.9 https://github.com/nginx/nginx.git
+RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git
 RUN \
      cd nginx && \
      auto/configure \
@@ -31,7 +31,7 @@ RUN \
 RUN  ls -l /usr/local/lib
 RUN  ls -l /nginx/objs
 
-FROM nginx:1.15.9-alpine
+FROM nginx:1.18.0-alpine
 RUN \
      apk update && \
      apk upgrade && \
