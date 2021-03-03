@@ -3,8 +3,9 @@ name: Build Image
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  ENDPOINT: "philosowaffle/swag-nginx-opentracing"
-  BRANCH: "swag-nginx-opentracing"
+  DOCKER_REGISTRY: registry.hub.docker.com    
+  DOCKER_IMAGE: philosowaffle/swag-nginx-opentracing
+  DOCKER_TARGET_PLATFORM: linux/amd64,linux/arm64
 
 jobs:
   build:
@@ -12,46 +13,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.3
 
-      - name: Build image
-        run: |
-          docker build --no-cache -t ${{ github.sha }} .
-
-      - name: Tag image
-        if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) }}
-        run: |
-          docker tag ${{ github.sha }} ${ENDPOINT}:${{ github.sha }}
-
-      - name: Credential check
-        if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) }}
-        run: |
-          echo "CR_USER=${{ secrets.CR_USER }}" >> $GITHUB_ENV
-          echo "CR_PAT=${{ secrets.CR_PAT }}" >> $GITHUB_ENV
-          echo "DOCKERUSER=${{ secrets.DOCKERUSER }}" >> $GITHUB_ENV
-          echo "DOCKERPASS=${{ secrets.DOCKERPASS }}" >> $GITHUB_ENV
-          if [[ "${{ secrets.CR_USER }}" == "" && "${{ secrets.CR_PAT }}" == "" && "${{ secrets.DOCKERUSER }}" == "" && "${{ secrets.DOCKERPASS }}" == "" ]]; then
-            echo "::error::Push credential secrets missing."
-            echo "::error::You must set either CR_USER & CR_PAT or DOCKERUSER & DOCKERPASS as secrets in your repo settings."
-            echo "::error::See https://github.com/linuxserver/docker-mods/blob/master/README.md for more information/instructions."
-            exit 1
-          fi
-
-      - name: Login to GitHub Container Registry
-        if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.CR_USER && env.CR_PAT }}
-        run: |
-          echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ secrets.CR_USER }} --password-stdin
-
-      - name: Push tags to GitHub Container Registry
-        if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.CR_USER && env.CR_PAT }}
-        run: |
-          docker push ghcr.io/${ENDPOINT}:${{ github.sha }}
-          docker push ghcr.io/${ENDPOINT}:
-
-      - name: Login to DockerHub
-        if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.DOCKERUSER && env.DOCKERPASS }}
-        run: |
-          echo ${{ secrets.DOCKERPASS }} | docker login -u ${{ secrets.DOCKERUSER }} --password-stdin
-
-      - name: Push tags to DockerHub
-        if: ${{ github.ref == format('refs/heads/{0}', env.BRANCH) && env.DOCKERUSER && env.DOCKERPASS }}
-        run: |
-          docker push ${ENDPOINT}:${{ github.sha }}
+      - name: Set up Docker Buildx      
+        uses: crazy-max/ghaction-docker-buildx@v1      
+        with:        
+          version: latest
+      - name: Prepare Args      
+        if: success()      
+        id: prepare      
+        run: |        
+          echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}        
+          echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}        
+          echo ::set-output name=version::latest
+      - name: Docker Login      
+        if: success()      
+        run: |        
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${DOCKER_REGISTRY} --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Create and Publish Images to Dockerhub    
+        if: success()
+        run: |        
+          docker buildx build --platform ${{ steps.prepare.outputs.docker_platform }} --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} --file $GITHUB_WORKSPACE/Dockerfile --push .
