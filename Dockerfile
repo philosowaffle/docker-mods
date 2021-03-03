@@ -32,11 +32,6 @@ RUN  ls -l /usr/local/lib
 RUN  ls -l /nginx/objs
 
 FROM scratch
-RUN \
-     apk update && \
-     apk upgrade && \
-     apk add curl && \
-     apk add curl-dev protobuf-dev pcre-dev openssl-dev
 COPY --from=0 /usr/local/lib/libopentracing.so.1.5.1 /usr/local/lib/libopentracing.so.1.5.1
 COPY --from=0 /usr/local/lib/libzipkin.so.0.5.2 /usr/local/lib/libzipkin.so.0.5.2
 COPY --from=0 /usr/local/lib/libzipkin_opentracing.so.0.5.2 /usr/local/lib/libzipkin_opentracing.so.0.5.2
