@@ -19,6 +19,19 @@ RUN  cd zipkin-cpp-opentracing && \
 RUN  git clone https://github.com/opentracing-contrib/nginx-opentracing.git
 RUN  ls -l /nginx-opentracing/opentracing
 
+RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git
+RUN \
+     cd nginx && \
+     auto/configure \
+        --with-compat \
+        --add-dynamic-module=/nginx-opentracing/opentracing \
+        --with-debug && \
+     make modules && \
+     ls -l objs && \
+     echo Made
+RUN  ls -l /usr/local/lib
+RUN  ls -l /nginx/objs
+
 FROM scratch
 COPY --from=0 /usr/local/lib/libopentracing.so.1.5.1 /usr/lib/nginx/modules/libopentracing.so
 COPY --from=0 /usr/local/lib/libzipkin.so.0.5.2 /usr/lib/nginx/modules/libzipkin.so
