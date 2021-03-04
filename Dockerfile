@@ -37,11 +37,10 @@ RUN  ls -l /nginx/objs
 
 FROM scratch
 
-COPY --from=buildstage1 /usr/local/lib/libopentracing.so.1.5.1 /custom_modules/libopentracing.so
-COPY --from=buildstage1 /usr/local/lib/libzipkin.so.0.5.2 /custom_modules/libzipkin.so
-COPY --from=buildstage1 /usr/local/lib/libzipkin_opentracing.so.0.5.2 /custom_modules/libzipkin_opentracing_plugin.so
-COPY --from=buildstage1 /nginx/objs/ngx_http_opentracing_module.so /custom_modules/ngx_http_opentracing_module.so
+COPY --from=buildstage1 /usr/local/lib/libopentracing.so.1.5.1 root/custom_modules/libopentracing.so
+COPY --from=buildstage1 /usr/local/lib/libzipkin.so.0.5.2 root/custom_modules/libzipkin.so
+COPY --from=buildstage1 /usr/local/lib/libzipkin_opentracing.so.0.5.2 root/custom_modules/libzipkin_opentracing_plugin.so
+COPY --from=buildstage1 /nginx/objs/ngx_http_opentracing_module.so root/custom_modules/ngx_http_opentracing_module.so
 COPY root/ /
-COPY custom_modules/ /custom_modules
 
 # https://github.com/opentracing-contrib/nginx-opentracing/issues/72
