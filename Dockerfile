@@ -1,6 +1,6 @@
 ARG CACHEBUST=1 
 
-FROM linuxserver/baseimage-alpine-nginx:3.13 as buildstage1
+FROM alpine:3.12 as buildstage
 
 RUN \
      apk update && \
@@ -28,7 +28,8 @@ RUN \
      auto/configure \
         --with-compat \
         --add-dynamic-module=/nginx-opentracing/opentracing \
-        --with-debug && \
+        --with-debug \
+        --with-cpp_test_module && \
      make modules && \
      ls -l objs && \
      echo Made
@@ -37,10 +38,10 @@ RUN  ls -l /nginx/objs
 
 FROM scratch as bundle
 
-COPY --from=buildstage1 /usr/local/lib/libopentracing.so.1.5.1 /root-layer/custom_modules/libopentracing.so
-COPY --from=buildstage1 /usr/local/lib/libzipkin.so.0.5.2 /root-layer/custom_modules/libzipkin.so
-COPY --from=buildstage1 /usr/local/lib/libzipkin_opentracing.so.0.5.2 r/oot-layer/custom_modules/libzipkin_opentracing_plugin.so
-COPY --from=buildstage1 /nginx/objs/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
+COPY --from=buildstage /usr/local/lib/libopentracing.so.1.5.1 /root-layer/custom_modules/libopentracing.so
+COPY --from=buildstage /usr/local/lib/libzipkin.so.0.5.2 /root-layer/custom_modules/libzipkin.so
+COPY --from=buildstage /usr/local/lib/libzipkin_opentracing.so.0.5.2 r/oot-layer/custom_modules/libzipkin_opentracing_plugin.so
+COPY --from=buildstage /nginx/objs/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
 COPY root/ /root-layer/
 
 FROM scratch
