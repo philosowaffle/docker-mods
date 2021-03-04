@@ -6,20 +6,22 @@ RUN \
      apk add curl && \
      apk add curl-dev protobuf-dev pcre-dev openssl-dev && \
      apk add build-base cmake autoconf automake git
-RUN  git clone -b v1.5.1 https://github.com/opentracing/opentracing-cpp.git
+RUN  git clone -b v1.5.1 https://github.com/opentracing/opentracing-cpp.git && echo "1"
 RUN  cd opentracing-cpp && \
      mkdir .build && cd .build && ls && \
      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && ls && \
-     make && make install
-RUN  git clone -b v0.5.2 https://github.com/rnburn/zipkin-cpp-opentracing.git
+     make && make install && \
+     echo "1"
+RUN  git clone -b v0.5.2 https://github.com/rnburn/zipkin-cpp-opentracing.git && echo "1"
 RUN  cd zipkin-cpp-opentracing && \
      mkdir .build && cd .build && \
      cmake -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && \
-     make && make install
-RUN  git clone https://github.com/opentracing-contrib/nginx-opentracing.git
-RUN  ls -l /nginx-opentracing/opentracing
+     make && make install && \
+     echo "1"
+RUN  git clone https://github.com/opentracing-contrib/nginx-opentracing.git && echo "1"
+RUN  ls -l /nginx-opentracing/opentracing && echo "1"
 
-RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git
+RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git && echo "1"
 RUN \
      cd nginx && \
      auto/configure \
@@ -28,9 +30,10 @@ RUN \
         --with-debug && \
      make modules && \
      ls -l objs && \
-     echo Made
-RUN  ls -l /usr/local/lib
-RUN  ls -l /nginx/objs
+     echo Made && \
+     echo "1"
+RUN  ls -l /usr/local/lib && echo "1"
+RUN  ls -l /nginx/objs && echo "1"
 
 COPY /usr/local/lib/libopentracing.so.1.5.1 /root-layer/custom_modules/libopentracing.so
 COPY /usr/local/lib/libzipkin.so.0.5.2 /root-layer/custom_modules/libzipkin.so
