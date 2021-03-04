@@ -42,5 +42,6 @@ COPY --from=buildstage1 /usr/local/lib/libzipkin.so.0.5.2 /custom_modules/libzip
 COPY --from=buildstage1 /usr/local/lib/libzipkin_opentracing.so.0.5.2 /custom_modules/libzipkin_opentracing_plugin.so
 COPY --from=buildstage1 /nginx/objs/ngx_http_opentracing_module.so /custom_modules/ngx_http_opentracing_module.so
 COPY root/ /
+COPY custom_modules/ /custom_modules
 
 # https://github.com/opentracing-contrib/nginx-opentracing/issues/72
