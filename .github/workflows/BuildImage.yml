@@ -33,7 +33,7 @@ jobs:
           push: true
           build-args: CACHEBUST=${{ github.run_id }}
           tags: philosowaffle/swag-nginx-opentracing:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       
