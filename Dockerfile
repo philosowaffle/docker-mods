@@ -2,15 +2,15 @@ ARG CACHEBUST=1
 
 FROM alpine:3.10 as buildstage1
 
-RUN echo "$CACHEBUST"
-RUN apk --version
+RUN echo $CACHEBUST
 
 RUN \
      apk update && \
      apk upgrade && \
      apk add curl && \
      apk add curl-dev protobuf-dev pcre-dev openssl-dev && \
-     apk add build-base cmake autoconf automake git
+     apk add build-base cmake autoconf automake git && \
+     echo $CACHEBUST
 RUN  git clone -b v1.5.1 https://github.com/opentracing/opentracing-cpp.git
 RUN  cd opentracing-cpp && \
      mkdir .build && cd .build && ls && \
