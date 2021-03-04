@@ -26,7 +26,7 @@ jobs:
         with:
           context: .
           push: true
-          build-args: CACHEBUST=${{ github.job }}
+          build-args: CACHEBUST=${{ github.run_id }}
           tags: philosowaffle/swag-nginx-opentracing:latest
           platforms: linux/amd64,linux/arm64
           no-cache: true
