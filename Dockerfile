@@ -35,8 +35,6 @@ RUN \
 RUN  ls -l /usr/local/lib
 RUN  ls -l /nginx/objs
 
-RUN ls -l /root-layer
-
 FROM scratch
 
 COPY --from=buildstage1 /usr/local/lib/libopentracing.so.1.5.1 /custom_modules/libopentracing.so
