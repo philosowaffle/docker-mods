@@ -9,7 +9,7 @@ RUN \
      apk add curl-dev protobuf-dev pcre-dev openssl-dev && \
      apk add build-base cmake autoconf automake git && \
      apk add gcompat libgcc libstdc++ pcre
-RUN  git clone -b v1.6.0 https://github.com/opentracing/opentracing-cpp.git
+RUN  git clone -b v1.5.1 https://github.com/opentracing/opentracing-cpp.git
 RUN  cd opentracing-cpp && \
      mkdir .build && cd .build && ls && \
      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && ls && \
