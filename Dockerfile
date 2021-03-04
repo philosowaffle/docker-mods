@@ -2,7 +2,7 @@ ARG CACHEBUST=1
 
 FROM alpine:3.10 as buildstage1
 
-RUN echo $CACHEBUST
+RUN mkdir $CACHEBUST
 
 RUN \
      apk update && \
@@ -26,6 +26,7 @@ RUN  ls -l /nginx-opentracing/opentracing
 
 RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git
 RUN \
+     mkdir -p $CACHEBUST && \
      cd nginx && \
      auto/configure \
         --with-compat \
