@@ -1,5 +1,5 @@
 FROM alpine:3.10 as buildstage
-RUN echo "echo"
+
 RUN \
      apk update && \
      apk upgrade && \
