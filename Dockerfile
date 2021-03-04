@@ -1,6 +1,6 @@
 ARG CACHEBUST=1 
 
-FROM alpine:3.10 as buildstage1
+FROM linuxserver/baseimage-alpine-nginx:3.13 as buildstage1
 
 RUN \
      apk update && \
