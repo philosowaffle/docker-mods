@@ -1,5 +1,7 @@
 FROM alpine:3.10 as buildstage1
 
+RUN echo "v1"
+
 RUN \
      apk update && \
      apk upgrade && \
