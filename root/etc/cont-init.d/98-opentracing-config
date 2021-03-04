@@ -4,20 +4,14 @@ echo "**** adding opentracing modules ****"
 
 ls -l /
 
+cp "/custom_modules/libopentracing.so" /usr/lib/nginx/modules/libopentracing.so.1
 cp "/custom_modules/libopentracing.so" /usr/lib/nginx/modules/libopentracing.so
+cp "/custom_modules/libzipkin.so" /usr/lib/nginx/modules/libzipkin.so.0
 cp "/custom_modules/libzipkin.so" /usr/lib/nginx/modules/libzipkin.so
-cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
+cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing.so.0
+cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing.so
 cp "/custom_modules/ngx_http_opentracing_module.so" /usr/lib/nginx/modules/ngx_http_opentracing_module.so
-#chmod +x /usr/local/bin/docker-compose
-#rm -rf /docker-compose
 
 # mv /custom_modules/libopentracing.so /usr/lib/nginx/modules/libopentracing.so
 # mv /custom_modules/libzipkin_opentracing_plugin.so /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
 # mv /custom_modules/ngx_http_opentracing_module.so /usr/lib/nginx/modules/ngx_http_opentracing_module.so
-
-
-#COPY /usr/local/lib/libopentracing.so.1.5.1 /root-layer/custom_modules/libopentracing.so
-#COPY /usr/local/lib/libzipkin.so.0.5.2 /root-layer/custom_modules/libzipkin.so
-#COPY /usr/local/lib/libzipkin_opentracing.so.0.5.2 /root-layer/custom_modules/libzipkin_opentracing_plugin.so
-#COPY /nginx/objs/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
-#COPY root/ /root-layer/
