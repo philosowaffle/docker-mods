@@ -8,7 +8,7 @@ RUN \
      apk add curl && \
      apk add curl-dev protobuf-dev pcre-dev openssl-dev && \
      apk add build-base cmake autoconf automake git && \
-     echo $CACHEBUST
+     apk add gcompat libgcc libstdc++ pcre
 RUN  git clone -b v1.5.1 https://github.com/opentracing/opentracing-cpp.git
 RUN  cd opentracing-cpp && \
      mkdir .build && cd .build && ls && \
