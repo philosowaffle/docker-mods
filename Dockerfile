@@ -2,7 +2,7 @@ ARG CACHEBUST=1
 
 FROM alpine:3.10 as buildstage1
 
-RUN echo CACHEBUST
+RUN echo "$CACHEBUST"
 
 RUN \
      apk update && \
