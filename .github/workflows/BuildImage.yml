@@ -28,6 +28,7 @@ jobs:
           push: true
           tags: philosowaffle/swag-nginx-opentracing:latest
           platforms: linux/amd64,linux/arm64
+          no-cache: true
           
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
