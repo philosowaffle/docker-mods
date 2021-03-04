@@ -2,10 +2,12 @@
 
 echo "**** adding opentracing modules ****"
 
-mv "/custom_modules/libopentracing.so" /usr/lib/nginx/modules/libopentracing.so
-mv "/custom_modules/libzipkin.so" /usr/lib/nginx/modules/libzipkin.so
-mv "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
-mv "/custom_modules/ngx_http_opentracing_module.so" /usr/lib/nginx/modules/ngx_http_opentracing_module.so
+ls -l /
+
+#mv "/custom_modules/libopentracing.so" /usr/lib/nginx/modules/libopentracing.so
+#mv "/custom_modules/libzipkin.so" /usr/lib/nginx/modules/libzipkin.so
+#mv "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
+#mv "/custom_modules/ngx_http_opentracing_module.so" /usr/lib/nginx/modules/ngx_http_opentracing_module.so
 #chmod +x /usr/local/bin/docker-compose
 #rm -rf /docker-compose
 
