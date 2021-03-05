@@ -27,7 +27,7 @@ RUN \
      cd nginx && \
      auto/configure \
         --add-dynamic-module=/nginx-opentracing/opentracing \
-     make && make install \
+     make modules \
      ls -l objs && \
      echo Made
 RUN  ls -l /usr/local/lib
