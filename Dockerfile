@@ -81,15 +81,6 @@ RUN true \
   && export HUNTER_INSTALL_DIR=$(cat _3rdParty/Hunter/install-root-dir) \
   && cd "$tempDir" \
   && ln -s /usr/local/lib/libjaegertracing.so /usr/local/lib/libjaegertracing_plugin.so \
-### Build dd-opentracing-cpp
-  && git clone --depth 1 -b $DATADOG_VERSION https://github.com/DataDog/dd-opentracing-cpp.git \
-  && cd dd-opentracing-cpp \
-  && scripts/install_dependencies.sh not-opentracing not-curl not-zlib \
-  && mkdir .build && cd .build \
-  && cmake -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. \
-  && make && make install \
-  && cd "$tempDir" \
-  && ln -s /usr/local/lib/libdd_opentracing.so /usr/local/lib/libdd_opentracing_plugin.so \
 ### Build gRPC
   && git clone --depth 1 -b $GRPC_VERSION https://github.com/grpc/grpc \
   && cd grpc \
@@ -98,14 +89,6 @@ RUN true \
   && cd third_party/protobuf \
   && make install \
   && cd "$tempDir" \
-### Build lightstep-tracer-cpp
-  && git clone --depth 1 -b $LIGHTSTEP_VERSION https://github.com/lightstep/lightstep-tracer-cpp.git \
-  && cd lightstep-tracer-cpp \
-  && mkdir .build && cd .build \
-  && cmake -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. \
-  && make && make install \
-  && cd "$tempDir" \
-  && ln -s /usr/local/lib/liblightstep_tracer.so /usr/local/lib/liblightstep_tracer_plugin.so \
 ### Build nginx-opentracing modules
   && NGINX_VERSION=`nginx -v 2>&1` && NGINX_VERSION=${NGINX_VERSION#*nginx/} \
   && echo "deb-src http://nginx.org/packages/mainline/debian/ stretch nginx" >> /etc/apt/sources.list \
