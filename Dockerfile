@@ -26,8 +26,11 @@ RUN  git clone -b release-1.18.0 https://github.com/nginx/nginx.git
 RUN \
      cd nginx && \
      auto/configure \
+        --with-compat \
         --add-dynamic-module=/nginx-opentracing/opentracing \
-     make modules \
+        --with-debug \
+        --with-cpp_test_module && \
+     make modules && \
      ls -l objs && \
      echo Made
 RUN  ls -l /usr/local/lib
