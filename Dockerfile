@@ -1,6 +1,6 @@
 ARG CACHEBUST=1 
 
-FROM opentracing-contrib/nginx-opentracing:latest as buildstage
+FROM nginx-opentracing:latest as buildstage
 
 FROM scratch as bundle
 
