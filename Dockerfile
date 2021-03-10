@@ -11,8 +11,8 @@ RUN \
      apk add build-base cmake autoconf automake git && \
      apk add gcompat libgcc libstdc++ pcre
      
-RUN git clone --depth 1 -b $JAEGER_CPP_VERSION https://github.com/jaegertracing/cpp-client.git jaeger-cpp-client \
-  && cd jaeger-cpp-client \
+RUN git clone --depth 1 -b $JAEGER_CPP_VERSION https://github.com/jaegertracing/cpp-client.git jaeger-cpp-client 
+RUN cd jaeger-cpp-client \
   && mkdir .build && cd .build \
   && cmake -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=OFF \
