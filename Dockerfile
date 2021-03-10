@@ -1,4 +1,5 @@
 ARG CACHEBUST=1
+ARG JAEGER_CPP_VERSION=v0.7.0
 
 FROM nginx:1.18.0-alpine as buildstage
 
@@ -9,16 +10,27 @@ RUN \
      apk add curl-dev protobuf-dev pcre-dev openssl-dev && \
      apk add build-base cmake autoconf automake git && \
      apk add gcompat libgcc libstdc++ pcre
+     
+RUN git clone --depth 1 -b $JAEGER_CPP_VERSION https://github.com/jaegertracing/cpp-client.git jaeger-cpp-client \
+  && cd jaeger-cpp-client \
+  && mkdir .build && cd .build \
+  && cmake -DCMAKE_BUILD_TYPE=Release \
+           -DBUILD_TESTING=OFF \
+           -DJAEGERTRACING_WITH_YAML_CPP=ON .. \
+  && make && make install
+  
 RUN  git clone -b v1.5.1 https://github.com/opentracing/opentracing-cpp.git
 RUN  cd opentracing-cpp && \
      mkdir .build && cd .build && ls && \
      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && ls && \
      make && make install
+
 RUN  git clone -b v0.5.2 https://github.com/rnburn/zipkin-cpp-opentracing.git
 RUN  cd zipkin-cpp-opentracing && \
      mkdir .build && cd .build && \
      cmake -DBUILD_SHARED_LIBS=1 -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .. && \
      make && make install
+
 RUN  git clone https://github.com/opentracing-contrib/nginx-opentracing.git
 RUN  ls -l /nginx-opentracing/opentracing
 
