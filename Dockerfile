@@ -1,5 +1,4 @@
 ARG CACHEBUST=1
-ARG JAEGER_CPP_VERSION=v0.7.0
 
 FROM nginx:1.18.0-alpine as buildstage
 
@@ -11,8 +10,8 @@ RUN \
      apk add build-base cmake autoconf automake git && \
      apk add gcompat libgcc libstdc++ pcre
      
-RUN git clone --depth 1 -b $JAEGER_CPP_VERSION https://github.com/jaegertracing/cpp-client.git jaeger-cpp-client 
-RUN cd jaeger-cpp-client \
+RUN git clone -b v07.7.0 https://github.com/jaegertracing/cpp-client.git
+RUN cd cpp-client \
   && mkdir .build && cd .build \
   && cmake -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=OFF \
