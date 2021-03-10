@@ -100,7 +100,7 @@ RUN true \
   && NGINX_MODULES_PATH=$(nginx -V 2>&1 | grep -oP "modules-path=\K[^\s]*") \
   && auto/configure \
         --with-compat \
-        --add-dynamic-module=/src/opentracing \
+        --add-dynamic-module=/src/opentracing-cpp \
         --with-cc-opt="-I$HUNTER_INSTALL_DIR/include" \
         --with-ld-opt="-L$HUNTER_INSTALL_DIR/lib" \
         --with-debug \
