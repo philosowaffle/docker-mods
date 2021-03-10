@@ -10,7 +10,7 @@ RUN \
      apk add build-base cmake autoconf automake git && \
      apk add gcompat libgcc libstdc++ pcre
      
-RUN git clone -b v07.7.0 https://github.com/jaegertracing/cpp-client.git
+RUN git clone -b 0.7.0 https://github.com/jaegertracing/cpp-client.git
 RUN cd cpp-client \
   && mkdir .build && cd .build \
   && cmake -DCMAKE_BUILD_TYPE=Release \
