@@ -43,19 +43,17 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
 	tar -zxC /usr/src -f nginx.tar.gz && \
   cd /usr/src/nginx-$NGINX_VERSION && \
   ./configure --with-compat $CONFARGS --add-dynamic-module=/nginx-opentracing/opentracing && \
-  make modules && \
-  mv ./objs/*.so /nginxObjs
+  make modules
 
 RUN  ls -l /usr/local/lib
 RUN  ls -l /usr/src/nginx-1.18.0/objs
-RUN ls -l /nginxObjs
 
 FROM scratch as bundle
 
 COPY --from=buildstage /usr/local/lib/libopentracing.so.1.5.1 /root-layer/custom_modules/libopentracing.so
 COPY --from=buildstage /usr/local/lib/libzipkin.so.0.5.2 /root-layer/custom_modules/libzipkin.so
 COPY --from=buildstage /usr/local/lib/libzipkin_opentracing.so.0.5.2 r/oot-layer/custom_modules/libzipkin_opentracing_plugin.so
-COPY --from=buildstage /nginxObjs/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
+COPY --from=buildstage /usr/src/nginx-$NGINX_VERSION/objs/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
 COPY root/ /root-layer/
 
 FROM scratch
