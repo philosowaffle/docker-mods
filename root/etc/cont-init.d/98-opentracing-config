@@ -8,6 +8,8 @@ cp /custom_modules/objs/*.so* /usr/lib/nginx/modules
 export LD_LIBRARY_PATH=/usr/lib/nginx/modules
 echo $LD_LIBRARY_PATH
 
+apk add libc6-compat libstdc++
+
 ldconfig
 
 #cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
