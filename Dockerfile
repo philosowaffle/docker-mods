@@ -61,9 +61,8 @@ FROM scratch as bundle
 
 COPY --from=buildstage /usr/local/lib/ /root-layer/custom_modules/
 COPY --from=buildstage /usr/local/lib/ /root-layer/var/lib/nginx/modules/
-#COPY --from=buildstage /usr/local/lib64/ /root-layer/custom_modules/
-COPY --from=buildstage /usr/src/nginx-1.18.0/objs/*_module.so /root-layer/custom_modules/objs
-COPY --from=buildstage /usr/src/nginx-1.18.0/objs/ /root-layer/etc/nginx/modules/
+COPY --from=buildstage /usr/lib/nginx/modules/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
+COPY --from=buildstage /usr/lib/nginx/modules/ngx_http_opentracing_module.so /root-layer/var/lib/nginx/modules/ngx_http_opentracing_module.so
 COPY root/ /root-layer/
 
 FROM scratch
