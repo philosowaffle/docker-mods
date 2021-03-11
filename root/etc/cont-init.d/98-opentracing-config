@@ -4,9 +4,9 @@ echo "**** adding opentracing modules ****"
 
 ls -l /
 
-cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
+#cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
 # cp "/custom_modules/libjaegertracing_plugin.so" /usr/lib/nginx/modules/libjaegertracing_plugin.so
-cp "/custom_modules/ngx_http_opentracing_module.so" /usr/lib/nginx/modules/ngx_http_opentracing_module.so
+#cp "/custom_modules/ngx_http_opentracing_module.so" /usr/lib/nginx/modules/ngx_http_opentracing_module.so
 
 #COPY --from=buildstage /usr/local/lib/libzipkin_opentracing.so /root-layer/custom_modules/libzipkin_opentracing_plugin.so
 #COPY --from=buildstage /usr/local/lib/libjaegertracing.so /root-layer/custom_modules/libjaegertracing_plugin.so
