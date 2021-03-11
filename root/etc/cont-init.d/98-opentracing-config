@@ -2,15 +2,15 @@
 
 echo "**** adding opentracing modules ****"
 
-cp /custom_modules/*.so* /usr/lib/nginx/modules
-cp /custom_modules/objs/*.so* /usr/lib/nginx/modules
+cp /custom_modules/ /usr/lib/nginx/modules
+cp /custom_modules/objs/ /usr/lib/nginx/modules
 
-export LD_LIBRARY_PATH=/usr/lib/nginx/modules
-echo $LD_LIBRARY_PATH
+#export LD_LIBRARY_PATH=/usr/lib/nginx/modules
+#echo $LD_LIBRARY_PATH
 
 apk add libc6-compat libstdc++
 
-ldconfig
+# ldconfig
 
 #cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
 # cp "/custom_modules/libjaegertracing_plugin.so" /usr/lib/nginx/modules/libjaegertracing_plugin.so
