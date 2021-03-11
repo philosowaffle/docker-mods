@@ -2,7 +2,11 @@
 
 echo "**** adding opentracing modules ****"
 
-ls -l /
+cp /custom_modules/*.so* /usr/lib/nginx/modules
+cp /custom_modules/objs/*.so* /usr/lib/nginx/modules
+
+export LD_LIBRARY_PATH=/usr/lib/nginx/modules
+echo $LD_LIBRARY_PATH
 
 #cp "/custom_modules/libzipkin_opentracing_plugin.so" /usr/lib/nginx/modules/libzipkin_opentracing_plugin.so
 # cp "/custom_modules/libjaegertracing_plugin.so" /usr/lib/nginx/modules/libjaegertracing_plugin.so
