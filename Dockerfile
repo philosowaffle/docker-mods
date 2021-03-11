@@ -61,9 +61,9 @@ RUN  ls -l /usr/src/nginx-1.18.0/objs
 
 FROM scratch as bundle
 
-COPY --from=buildstage /usr/local/lib/*.so /root-layer/custom_modules/
-COPY --from=buildstage /usr/local/lib64/*.so /root-layer/custom_modules/
-COPY --from=buildstage /usr/local/lib/*.so.* /root-layer/custom_modules/
+COPY --from=buildstage /usr/local/lib/ /root-layer/custom_modules/
+COPY --from=buildstage /usr/local/lib64/ /root-layer/custom_modules/
+COPY --from=buildstage /usr/local/lib/ /root-layer/custom_modules/
 COPY --from=buildstage /usr/src/nginx-1.18.0/objs/ /root-layer/custom_modules/objs
 COPY root/ /root-layer/
 
