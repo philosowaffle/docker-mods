@@ -1,6 +1,6 @@
-FROM nginx:1.18.10-alpine AS buildstage
+FROM nginx:1.18.0-alpine AS buildstage
 
-ENV NGINX_VERSION 1.18.10
+ENV NGINX_VERSION 1.18.0
 ENV OPENTRACING_CPP_VERSION 1.5.1
 ENV NGINX_OPENTRACING_VERSION 0.10.0
 ENV JAGER_TRACING 0.4.2
@@ -57,16 +57,6 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
   ./configure --with-compat $CONFARGS --add-dynamic-module=$OPENTRACING && \
   make && make install
   
-  
-FROM nginx:1.17.10-alpine
-
-# Extract the dynamic module NCHAN from the builder image
-ENV NGINX_VERSION 1.17.10
-#COPY --from=builder /usr/local/lib/libjaegertracing.so /usr/local/lib/libjaegertracing_plugin.so
-COPY --from=builder /usr/local/lib /usr/local/lib
-COPY --from=builder /usr/src/nginx-${NGINX_VERSION}/objs/*_module.so /etc/nginx/modules/
-# RUN apk add libc6-compat libstdc++
-
 FROM scratch as bundle
 
 COPY --from=buildstage /usr/local/lib/ /root-layer/custom_modules/
