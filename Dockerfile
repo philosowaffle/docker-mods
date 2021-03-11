@@ -1,9 +1,9 @@
 FROM nginx:1.18.0-alpine AS buildstage
 
 ENV NGINX_VERSION 1.18.0
-ENV OPENTRACING_CPP_VERSION 1.5.1
-ENV NGINX_OPENTRACING_VERSION 0.10.0
-ENV JAGER_TRACING 0.4.2
+ENV OPENTRACING_CPP_VERSION 1.6.0
+ENV NGINX_OPENTRACING_VERSION 0.13.0
+ENV JAGER_TRACING 0.7.0
 
 # Download sources
 RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.gz 
@@ -60,7 +60,7 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
 FROM scratch as bundle
 
 COPY --from=buildstage /usr/local/lib/ /root-layer/custom_modules/
-COPY --from=buildstage /usr/local/lib/ /root-layer/usr/local/lib
+COPY --from=buildstage /usr/local/lib/ /root-layer/var/lib/nginx/modules/
 #COPY --from=buildstage /usr/local/lib64/ /root-layer/custom_modules/
 COPY --from=buildstage /usr/src/nginx-1.18.0/objs/*_module.so /root-layer/custom_modules/objs
 COPY --from=buildstage /usr/src/nginx-1.18.0/objs/*_module.so /root-layer/etc/nginx/modules/
