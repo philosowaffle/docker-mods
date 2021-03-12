@@ -6,6 +6,8 @@ ENV OPENTRACING_CPP_VERSION 1.6.0
 ENV NGINX_OPENTRACING_VERSION 0.13.0
 ENV JAGER_TRACING 0.7.0
 
+COPY --from=opentracing / /
+
 # For latest build deps, see https://github.com/nginxinc/docker-nginx/blob/master/mainline/alpine/Dockerfile
 RUN apk add --no-cache --virtual .build-deps \
   gcc \
@@ -50,9 +52,6 @@ RUN apk add --no-cache --virtual .build-deps \
 #  make && \
 #  make install
 
-COPY --from=opentracing /opentracing/ /usr/local/nginx/modules
-COPY --from=opentracing /opentracing/ /usr/local/lib
-
 RUN cd /etc && git clone --depth 1 --branch v${NGINX_OPENTRACING_VERSION} https://github.com/opentracing-contrib/nginx-opentracing.git
 
 RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.gz
@@ -71,8 +70,8 @@ RUN ls -l /usr/src/nginx-$NGINX_VERSION
 # FROM philosowaffle/jaeger-client-arm as jaeger
 FROM scratch as bundle
 
-COPY --from=opentracing /opentracing/ /root-layer/custom_modules/
-COPY --from=opentracing /opentracing/ /root-layer/var/lib/nginx/
+# COPY --from=opentracing /opentracing/ /root-layer/custom_modules/
+# COPY --from=opentracing /opentracing/ /root-layer/var/lib/nginx/
 
 # COPY --from=jaeger /libjaegertracing/ /root-layer/custom_modules/
 # COPY --from=jaeger /libjaegertracing/ /root-layer/var/lib/nginx/
