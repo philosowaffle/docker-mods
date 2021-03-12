@@ -1,4 +1,4 @@
-FROM nginx:1.18.0-alpine AS buildstage
+FROM ghcr.io/linuxserver/baseimage-alpine:3.13 AS buildstage
 
 ENV NGINX_VERSION 1.18.0
 ENV OPENTRACING_CPP_VERSION 1.6.0
@@ -24,7 +24,13 @@ RUN apk add --no-cache --virtual .build-deps \
   geoip-dev \
   g++ \
   git \
-  cmake
+  cmake \
+  apache2-utils \
+  git \
+  libressl3.1-libssl \
+  logrotate \
+  nano \
+  nginx
   
 RUN wget "https://github.com/jaegertracing/jaeger-client-cpp/archive/v${JAGER_TRACING}.tar.gz" -O jaeger-tracing.tar.gz && \
   mkdir -p jaeger-tracing && \
