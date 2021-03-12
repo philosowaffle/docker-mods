@@ -54,6 +54,7 @@ RUN wget "https://github.com/opentracing/opentracing-cpp/archive/v${OPENTRACING_
 RUN cd /etc && git clone --depth 1 --branch v${NGINX_OPENTRACING_VERSION} https://github.com/opentracing-contrib/nginx-opentracing.git
 # Reuse same cli arguments as the nginx:alpine image used to build
 
+RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.gz
 RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
     CONFARGS=${CONFARGS/-Os -fomit-frame-pointer/-Os} && \
     mkdir /usr/src && \
@@ -62,6 +63,8 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
   cd /usr/src/nginx-$NGINX_VERSION && \
   ./configure --with-compat $CONFARGS --add-dynamic-module=$OPENTRACING && \
   make && make install
+
+RUN ls -l /usr/src/nginx-$NGINX_VERSION
   
 FROM scratch as bundle
 
