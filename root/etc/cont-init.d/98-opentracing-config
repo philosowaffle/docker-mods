@@ -2,6 +2,8 @@
 
 echo "**** adding opentracing modules ****"
 
+echo $NGINX_VERSION
+
 apk add --no-cache --virtual .build-deps \
   gcc \
   libc-dev \
@@ -23,7 +25,7 @@ apk add --no-cache --virtual .build-deps \
   git \
   wget
   
-wget "https://github.com/opentracing/opentracing-cpp/archive/v${OPENTRACING_CPP_VERSION}.tar.gz" -O opentracing-cpp.tar.gz && \
+wget "https://github.com/opentracing/opentracing-cpp/archive/v1.6.0.tar.gz" -O opentracing-cpp.tar.gz && \
   mkdir -p opentracing-cpp/.build && \
   tar zxvf opentracing-cpp.tar.gz -C ./opentracing-cpp/ --strip-components=1 && \
   cd opentracing-cpp/.build && \
