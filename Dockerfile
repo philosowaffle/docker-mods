@@ -35,7 +35,7 @@ RUN wget "https://github.com/opentracing/opentracing-cpp/archive/v${OPENTRACING_
 RUN cd /etc && git clone --depth 1 --branch v${NGINX_OPENTRACING_VERSION} https://github.com/opentracing-contrib/nginx-opentracing.git
 
 RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.gz
-RUN CONFGARGS=CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
+RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
     CONFARGS=${CONFARGS/-Os -fomit-frame-pointer/-Os}
 RUN echo $CONFARGS
 RUN mkdir /usr/src && \
@@ -54,7 +54,7 @@ FROM scratch as bundle
 # COPY --from=jaeger /libjaegertracing/ /root-layer/var/lib/nginx/
 
 COPY --from=buildstage /usr/local/lib/ /root-layer/custom_modules/
-COPY --from=buildstage /usr/local/lib/libopentracing* /root-layer/usr/lib
+COPY --from=buildstage /usr/local/lib/ /root-layer/usr/lib
 
 COPY --from=buildstage /usr/local/nginx/modules/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
 COPY --from=buildstage /usr/local/nginx/modules/ngx_http_opentracing_module.so /root-layer/var/lib/nginx/modules/ngx_http_opentracing_module.so
