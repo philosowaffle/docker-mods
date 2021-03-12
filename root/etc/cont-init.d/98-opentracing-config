@@ -2,8 +2,6 @@
 
 echo "**** adding opentracing modules ****"
 
-echo $NGINX_VERSION
-
 apk add --no-cache --virtual .build-deps \
   gcc \
   libc-dev \
@@ -33,8 +31,8 @@ wget "https://github.com/opentracing/opentracing-cpp/archive/v1.6.0.tar.gz" -O o
   make && \
   make install
  
-cd /etc && git clone --depth 1 --branch v$NGINX_VERSION https://github.com/opentracing-contrib/nginx-opentracing.git
-wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.gz
+cd /etc && git clone --depth 1 --branch v1.18.0 https://github.com/opentracing-contrib/nginx-opentracing.git
+wget "http://nginx.org/download/nginx-1.18.0.tar.gz" -O nginx.tar.gz
 
 CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
     CONFARGS=${CONFARGS/-Os -fomit-frame-pointer/-Os}
@@ -46,6 +44,6 @@ echo $CONFARGS
 mkdir /usr/src && \
 	tar -zxC /usr/src -f nginx.tar.gz && \
   OPENTRACING="/etc/nginx-opentracing/opentracing" && \
-  cd /usr/src/nginx-$NGINX_VERSION && \
+  cd /usr/src/nginx-1.18.0 && \
   ./configure --with-compat $CONFARGS --add-dynamic-module=$OPENTRACING && \
   make && make install
