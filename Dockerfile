@@ -1,3 +1,4 @@
+FROM philosowaffle/opentracing-cpp-arm as opentracing
 FROM ghcr.io/linuxserver/baseimage-alpine:3.13 AS buildstage
 
 ENV NGINX_VERSION 1.18.0
@@ -49,6 +50,9 @@ RUN apk add --no-cache --virtual .build-deps \
 #  make && \
 #  make install
 
+COPY --from=opentracing /opentracing/ /usr/local/nginx/modules
+COPY --from=opentracing /opentracing/ /usr/local/lib
+
 RUN cd /etc && git clone --depth 1 --branch v${NGINX_OPENTRACING_VERSION} https://github.com/opentracing-contrib/nginx-opentracing.git
 
 RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.gz
@@ -64,7 +68,6 @@ RUN mkdir /usr/src && \
 
 RUN ls -l /usr/src/nginx-$NGINX_VERSION
 
-FROM philosowaffle/opentracing-cpp-arm as opentracing
 # FROM philosowaffle/jaeger-client-arm as jaeger
 FROM scratch as bundle
 
