@@ -7,6 +7,22 @@ ENV NGINX_OPENTRACING_VERSION 0.13.0
 ENV JAGER_TRACING 0.7.0
 
 # COPY --from=opentracing / /
+RUN apk add --no-cache --virtual .build-deps \
+  gcc \
+  libc-dev \
+  make \
+  openssl-dev \
+  pcre-dev \
+  zlib-dev \
+  linux-headers \
+  gnupg \
+  libxslt-dev \
+  gd-dev \
+  geoip-dev \
+  g++ \
+  cmake \
+  apache2-utils \
+  libressl3.1-libssl
 
 RUN wget "https://github.com/opentracing/opentracing-cpp/archive/v${OPENTRACING_CPP_VERSION}.tar.gz" -O opentracing-cpp.tar.gz && \
   mkdir -p opentracing-cpp/.build && \
