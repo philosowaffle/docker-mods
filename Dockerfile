@@ -41,15 +41,15 @@ RUN apk add --no-cache --virtual .build-deps \
 #  && export HUNTER_INSTALL_DIR=$(cat _3rdParty/Hunter/install-root-dir) \
 #  && cp /usr/local/lib64/libjaegertracing.so /usr/local/lib/libjaegertracing_plugin.so 
   
-RUN wget "https://github.com/opentracing/opentracing-cpp/archive/v${OPENTRACING_CPP_VERSION}.tar.gz" -O opentracing-cpp.tar.gz && \
-  mkdir -p opentracing-cpp/.build && \
-  tar zxvf opentracing-cpp.tar.gz -C ./opentracing-cpp/ --strip-components=1 && \
-  cd opentracing-cpp/.build && \
-  cmake .. && \
-  make && \
-  make install
+#RUN wget "https://github.com/opentracing/opentracing-cpp/archive/v${OPENTRACING_CPP_VERSION}.tar.gz" -O opentracing-cpp.tar.gz && \
+#  mkdir -p opentracing-cpp/.build && \
+#  tar zxvf opentracing-cpp.tar.gz -C ./opentracing-cpp/ --strip-components=1 && \
+#  cd opentracing-cpp/.build && \
+#  cmake .. && \
+#  make && \
+#  make install
+
 RUN cd /etc && git clone --depth 1 --branch v${NGINX_OPENTRACING_VERSION} https://github.com/opentracing-contrib/nginx-opentracing.git
-# Reuse same cli arguments as the nginx:alpine image used to build
 
 RUN wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -O nginx.tar.gz
 RUN CONFGARGS=CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
@@ -63,13 +63,21 @@ RUN mkdir /usr/src && \
   make && make install
 
 RUN ls -l /usr/src/nginx-$NGINX_VERSION
-  
+
+FROM philosowaffle/opentracing-cpp-arm as opentracing
+# FROM philosowaffle/jaeger-client-arm as jaeger
 FROM scratch as bundle
+
+COPY --from=opentracing /opentracing/ /root-layer/custom_modules/
+COPY --from=opentracing /opentracing/ /root-layer/var/lib/nginx/
+
+# COPY --from=jaeger /libjaegertracing/ /root-layer/custom_modules/
+# COPY --from=jaeger /libjaegertracing/ /root-layer/var/lib/nginx/
 
 COPY --from=buildstage /usr/local/lib/ /root-layer/custom_modules/
 COPY --from=buildstage /usr/local/lib/ /root-layer/var/lib/nginx/
-COPY --from=buildstage /usr/lib/nginx/modules/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
-COPY --from=buildstage /usr/lib/nginx/modules/ngx_http_opentracing_module.so /root-layer/var/lib/nginx/modules/ngx_http_opentracing_module.so
+COPY --from=buildstage /usr/local/nginx/modules/ngx_http_opentracing_module.so /root-layer/custom_modules/ngx_http_opentracing_module.so
+COPY --from=buildstage /usr/local/nginx/modules/ngx_http_opentracing_module.so /root-layer/var/lib/nginx/modules/ngx_http_opentracing_module.so
 COPY root/ /root-layer/
 
 FROM scratch
